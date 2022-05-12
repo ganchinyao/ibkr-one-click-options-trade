@@ -5,6 +5,7 @@ import { HeaderContent } from './components/HeaderContent';
 import { store } from './store';
 import { Provider } from 'react-redux';
 import { Button, ButtonSize } from './components/common/Button';
+import Colors from './constants/Colors';
 
 const App = () => {
   return (
@@ -40,6 +41,7 @@ const App = () => {
         <HeaderContent />
         <View style={styles.buttonsContainer}>
           <Button text="BUY" onPress={() => {}} size={ButtonSize.big} />
+          <Button text="SELL" onPress={() => {}} size={ButtonSize.big} buttonColor={Colors.red500} />
         </View>
       </SafeAreaView>
     </Provider>
@@ -53,6 +55,7 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     flexDirection: 'row',
     marginHorizontal: 15,
+    justifyContent: 'space-evenly',
   },
 });
 
