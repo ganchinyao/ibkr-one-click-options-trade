@@ -16,5 +16,21 @@ export const DEFAULT_USD_TO_BUY_AMT = 1000;
  * This is a simple layer of protection to ensure no unauthorize user can execute requests from our server.
  * You can change the string to any string, but you should also change the same string in the server too.
  */
-export const AUTH_CODE_POST_BUY = 'Crystal Paladin';
-export const AUTH_CODE_POST_CURRENT_TICKER = 'Uberdragon Bajula';
+export const URL = {
+  BUY: {
+    url: '/buy',
+    auth_code: 'Crystal Paladin',
+  },
+  SELL: {
+    url: '/sell',
+    auth_code: 'Bolmeteus Steel Dragon',
+  },
+  GET_CURRENT_TICKER: {
+    url: '/current_ticker',
+    auth_code: 'Uberdragon Jabaha',
+  },
+  UPDATE_CURRENT_TICKER: {
+    url: '/update_current_ticker',
+    auth_code: 'Uberdragon Bajula',
+  },
+};

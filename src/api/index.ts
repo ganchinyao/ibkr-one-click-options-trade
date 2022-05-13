@@ -1,14 +1,24 @@
-import { AUTH_CODE_POST_BUY, AUTH_CODE_POST_CURRENT_TICKER } from '../constants';
+import { URL } from '../constants';
 import { fetchMaker } from './fetchMaker';
+import { BuyParams, SellParams } from './types';
 
 export const getSample = async () => {
   const response = await fetchMaker.get('/d');
   console.log('### response:', response);
 };
 
-export const buyRequest = async () => {
-  const response = await fetchMaker.post('/buy', {
-    auth_code: AUTH_CODE_POST_BUY,
+export const buyRequest = async (params: BuyParams) => {
+  const response = await fetchMaker.post(URL.BUY.url, {
+    auth_code: URL.BUY.auth_code,
+    ...params,
+  });
+  console.log('### response:', response);
+};
+
+export const sellRequest = async (params: SellParams) => {
+  const response = await fetchMaker.post(URL.SELL.url, {
+    auth_code: URL.SELL.auth_code,
+    ...params,
   });
   console.log('### response:', response);
 };
@@ -18,7 +28,9 @@ export const buyRequest = async () => {
  * @returns the current ticker, in string. E.g. 'SPY'
  */
 export const getTicker = async () => {
-  return (await fetchMaker.get('/current_ticker')) as string;
+  return (await fetchMaker.post(URL.GET_CURRENT_TICKER.url, {
+    auth_code: URL.GET_CURRENT_TICKER.auth_code,
+  })) as string;
 };
 
 /**
@@ -26,8 +38,8 @@ export const getTicker = async () => {
  * @returns the current ticker, in string. E.g. 'SPY'
  */
 export const updateTicker = async (newTicker: string) => {
-  return (await fetchMaker.post('/current_ticker', {
-    auth_code: AUTH_CODE_POST_CURRENT_TICKER,
+  return (await fetchMaker.post(URL.UPDATE_CURRENT_TICKER.url, {
+    auth_code: URL.UPDATE_CURRENT_TICKER.auth_code,
     ticker: newTicker,
   })) as string;
 };
