@@ -18,6 +18,6 @@ module.exports = {
   },
   resolver: {
     ...defaultResolver,
-    sourceExts: [...defaultResolver.sourceExts, 'mjs'],
+    sourceExts: [...defaultResolver.sourceExts, 'mjs', 'cjs'],
   },
 };

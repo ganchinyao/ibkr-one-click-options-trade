@@ -3,12 +3,15 @@
  */
 import React from 'react';
 import { AppRegistry } from 'react-native';
-import App from './src/App';
+import Home from './src/Home';
 import { name as appName } from './app.json';
 import { Provider } from 'react-redux';
 import { store } from './src/store';
 import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
 import Colors from './src/constants/Colors';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const toastConfig = {
   /*
@@ -59,10 +62,49 @@ const toastConfig = {
   ),
 };
 
+const Tab = createBottomTabNavigator();
+
 const Root = () => (
   <Provider store={store}>
-    <App />
-    <Toast config={toastConfig} />
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={({ route }) => {
+          return {
+            headerShown: false,
+            tabBarActiveTintColor: Colors.green500,
+            tabBarInactiveTintColor: 'gray',
+            tabBarActiveBackgroundColor: Colors.background,
+            tabBarInactiveBackgroundColor: Colors.background,
+            tabBarStyle: {
+              backgroundColor: Colors.background,
+            },
+            tabBarIcon: ({ focused, color, size }) => {
+              let iconName;
+              switch (route.name) {
+                case 'Home':
+                  iconName = 'home-outline';
+                  break;
+                case 'History':
+                  iconName = 'list-outline';
+              }
+
+              return <Ionicons name={iconName} size={size} color={color} />;
+            },
+          };
+        }}
+      >
+        {/* <Home /> */}
+        <Tab.Screen
+          name="Home"
+          component={Home}
+          options={{
+            color: 'red',
+          }}
+        />
+        <Tab.Screen name="History" component={Home} />
+      </Tab.Navigator>
+    </NavigationContainer>
+    {/* <Toast config={toastConfig} /> */}
   </Provider>
 );
 
