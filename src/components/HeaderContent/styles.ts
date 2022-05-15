@@ -4,9 +4,8 @@ export const styles = StyleSheet.create({
   container: {},
   chipContainer: {
     flexDirection: 'row',
-    paddingHorizontal: 10,
   },
   chipStyle: {
-    marginHorizontal: 5,
+    marginRight: 10,
   },
 });

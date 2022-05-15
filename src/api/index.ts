@@ -22,6 +22,7 @@ export const sellRequest = async (params: SellParams) => {
     ...params,
   });
   console.log('### response:', response);
+  return response;
 };
 
 /**

@@ -10,6 +10,7 @@ import { OptionType } from './api/types';
 import { addBuyOrder, selectBuyOrders } from './store/contract/completedBuyOrderSlice';
 import Toast from 'react-native-toast-message';
 import { printRed, printGreen } from './utils';
+import { BoughtList } from './components/BoughtList';
 
 const App = () => {
   const selectedTicker = useAppSelector(selectTicker);
@@ -19,99 +20,117 @@ const App = () => {
 
   return (
     <SafeAreaView>
-      <Text>Green Rocket</Text>
-      <RNButton
-        title="Sample API"
-        onPress={async () => {
-          await getSample();
-        }}
-      />
-      <RNButton
-        title="Get current ticker"
-        onPress={async () => {
-          const currentTicker = await getTicker();
-          console.log('## current ticker: ', currentTicker);
-        }}
-      />
-      <RNButton
-        title="Update current ticker"
-        onPress={async () => {
-          const resp = await updateTicker('SPY');
-          console.log('## Update current ticker: ' + resp);
-        }}
-      />
-      <RNButton
-        title="Show Success Toast"
-        onPress={() => {
-          Toast.show({
-            type: 'success',
-            text1: 'Hello',
-            text2: 'Text2',
-            visibilityTime: 3000,
-          });
-        }}
-      />
-      <RNButton
-        title="Show Error Toast"
-        onPress={() => {
-          Toast.show({
-            type: 'error',
-            text1: 'Hello',
-            text2: 'Text2',
-            visibilityTime: 3000,
-          });
-        }}
-      />
-      <HeaderContent />
-      <View style={styles.buttonsContainer}>
-        <Button
-          text="BUY Call"
+      <View style={styles.container}>
+        <Text style={styles.selectionText}>Select Ticker:</Text>
+
+        {/* <RNButton
+          title="Sample API"
           onPress={async () => {
-            try {
-              const resp = await buyRequest({
-                ticker: selectedTicker,
-                type: OptionType.CALL,
-                amount_USD: contractAmtUSD,
-                dte: DTE,
-              });
-              Toast.show({
-                type: 'success',
-                text1: `Successfully bought ${resp.ticker}`,
-                visibilityTime: 3000,
-              });
-              dispatch(addBuyOrder(resp));
-              printGreen('Successfully bought.', resp);
-            } catch (ex) {
-              Toast.show({
-                type: 'error',
-                text1: 'Failed to buy.',
-                visibilityTime: 3000,
-              });
-              printRed('Failed to buy,', ex);
-            }
+            await getSample();
           }}
-          size={ButtonSize.big}
         />
-        <Button
-          text="SELL CALL"
+        <RNButton
+          title="Get current ticker"
           onPress={async () => {
-            // if (contractDate === '' || numContract === -1 || strike === -1) {
-            //   return;
-            // }
-            // await sellRequest({
-            //   ticker: selectedTicker,
-            //   type: OptionType.PUT,
-            //   contract_date: contractDate,
-            //   strike,
-            //   num_contract: numContract,
-            // });
+            const currentTicker = await getTicker();
+            console.log('## current ticker: ', currentTicker);
           }}
-          size={ButtonSize.big}
-          buttonColor={Colors.red500}
         />
-        {buyOrders.map((buyOrder) => (
-          <Text>{buyOrder.ticker}</Text>
-        ))}
+        <RNButton
+          title="Update current ticker"
+          onPress={async () => {
+            const resp = await updateTicker('SPY');
+            console.log('## Update current ticker: ' + resp);
+          }}
+        />
+        <RNButton
+          title="Show Success Toast"
+          onPress={() => {
+            Toast.show({
+              type: 'success',
+              text1: 'Hello',
+              text2: 'Text2',
+              visibilityTime: 3000,
+            });
+          }}
+        />
+        <RNButton
+          title="Show Error Toast"
+          onPress={() => {
+            Toast.show({
+              type: 'error',
+              text1: 'Hello',
+              text2: 'Text2',
+              visibilityTime: 3000,
+            });
+          }}
+        /> */}
+        <View style={styles.headerContentContainer}>
+          <HeaderContent />
+        </View>
+        <View style={styles.buttonsContainer}>
+          <Button
+            text="BUY Call"
+            onPress={async () => {
+              try {
+                const resp = await buyRequest({
+                  ticker: selectedTicker,
+                  type: OptionType.CALL,
+                  amount_USD: contractAmtUSD,
+                  dte: DTE,
+                });
+                Toast.show({
+                  type: 'success',
+                  text1: `Successfully bought ${resp.ticker} CALL`,
+                  visibilityTime: 3000,
+                });
+                dispatch(addBuyOrder(resp));
+                printGreen('Successfully bought Call.', resp);
+              } catch (ex) {
+                Toast.show({
+                  type: 'error',
+                  text1: 'Failed to buy Call.',
+                  visibilityTime: 3000,
+                });
+                printRed('Failed to buy Call.', ex);
+              }
+            }}
+            size={ButtonSize.big}
+          />
+          <Button
+            text="BUY PUT"
+            onPress={async () => {
+              try {
+                const resp = await buyRequest({
+                  ticker: selectedTicker,
+                  type: OptionType.PUT,
+                  amount_USD: contractAmtUSD,
+                  dte: DTE,
+                });
+                Toast.show({
+                  type: 'success',
+                  text1: `Successfully bought ${resp.ticker} PUT`,
+                  visibilityTime: 3000,
+                });
+                dispatch(addBuyOrder(resp));
+                printGreen('Successfully bought Put.', resp);
+              } catch (ex) {
+                Toast.show({
+                  type: 'error',
+                  text1: 'Failed to buy Put.',
+                  visibilityTime: 3000,
+                });
+                printRed('Failed to buy Put.', ex);
+              }
+            }}
+            size={ButtonSize.big}
+            buttonColor={Colors.red500}
+          />
+        </View>
+        <Text style={styles.boughtListTitle}>Current Position</Text>
+        <View style={styles.boughtListContainer}>
+          <BoughtList containerStyle={styles.boughtList} />
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -119,12 +138,27 @@ const App = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    paddingHorizontal: 15,
+    height: '100%',
+  },
+  headerContentContainer: {
+    marginVertical: 10,
   },
   buttonsContainer: {
     flexDirection: 'row',
-    marginHorizontal: 15,
+    marginVertical: 50,
     justifyContent: 'space-evenly',
+  },
+  boughtListContainer: {},
+  boughtListTitle: {
+    paddingTop: 10,
+    fontSize: 16,
+    fontStyle: 'italic',
+  },
+  boughtList: {},
+  selectionText: {
+    fontSize: 14,
+    color: Colors.bluegrey700,
   },
 });
 

@@ -3,7 +3,6 @@ import Colors from '../../../constants/Colors';
 
 export const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 15,
     marginVertical: 10,
   },
   titleText: {
