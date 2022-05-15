@@ -8,6 +8,8 @@ import Colors from './constants/Colors';
 import { DTE } from './constants';
 import { OptionType } from './api/types';
 import { addBuyOrder, selectBuyOrders } from './store/contract/completedBuyOrderSlice';
+import Toast from 'react-native-toast-message';
+import { printRed, printGreen } from './utils';
 
 const App = () => {
   const selectedTicker = useAppSelector(selectTicker);
@@ -38,18 +40,55 @@ const App = () => {
           console.log('## Update current ticker: ' + resp);
         }}
       />
+      <RNButton
+        title="Show Success Toast"
+        onPress={() => {
+          Toast.show({
+            type: 'success',
+            text1: 'Hello',
+            text2: 'Text2',
+            visibilityTime: 3000,
+          });
+        }}
+      />
+      <RNButton
+        title="Show Error Toast"
+        onPress={() => {
+          Toast.show({
+            type: 'error',
+            text1: 'Hello',
+            text2: 'Text2',
+            visibilityTime: 3000,
+          });
+        }}
+      />
       <HeaderContent />
       <View style={styles.buttonsContainer}>
         <Button
           text="BUY Call"
           onPress={async () => {
-            const resp = await buyRequest({
-              ticker: selectedTicker,
-              type: OptionType.CALL,
-              amount_USD: contractAmtUSD,
-              dte: DTE,
-            });
-            dispatch(addBuyOrder(resp));
+            try {
+              const resp = await buyRequest({
+                ticker: selectedTicker,
+                type: OptionType.CALL,
+                amount_USD: contractAmtUSD,
+                dte: DTE,
+              });
+              Toast.show({
+                type: 'success',
+                text1: `Successfully bought ${resp.ticker}`,
+                visibilityTime: 3000,
+              });
+              dispatch(addBuyOrder(resp));
+              printGreen('Successfully bought.', resp);
+            } catch (ex) {
+              Toast.show({
+                type: 'error',
+                text1: 'Failed to buy.',
+                visibilityTime: 3000,
+              });
+              printRed('Failed to buy,', ex);
+            }
           }}
           size={ButtonSize.big}
         />

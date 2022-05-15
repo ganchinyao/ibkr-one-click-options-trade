@@ -5,4 +5,5 @@ export default {
   green700: '#388E3C',
   bluegrey700: '#455A64',
   red500: '#F44336',
+  red700: '#D32F2F',
 };
