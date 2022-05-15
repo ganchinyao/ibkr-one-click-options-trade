@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { AppRegistry } from 'react-native';
-import Home from './src/Home';
+import Home from './src/Screens/Home';
 import { name as appName } from './app.json';
 import { Provider } from 'react-redux';
 import { store } from './src/store';
@@ -12,6 +12,7 @@ import Colors from './src/constants/Colors';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import History from './src/Screens/History';
 
 const toastConfig = {
   /*
@@ -93,18 +94,11 @@ const Root = () => (
           };
         }}
       >
-        {/* <Home /> */}
-        <Tab.Screen
-          name="Home"
-          component={Home}
-          options={{
-            color: 'red',
-          }}
-        />
-        <Tab.Screen name="History" component={Home} />
+        <Tab.Screen name="Home" component={Home} />
+        <Tab.Screen name="History" component={History} />
       </Tab.Navigator>
     </NavigationContainer>
-    {/* <Toast config={toastConfig} /> */}
+    <Toast config={toastConfig} />
   </Provider>
 );
 

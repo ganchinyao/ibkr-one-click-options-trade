@@ -3,6 +3,11 @@ export enum OptionType {
   PUT = 'PUT',
 }
 
+export enum ActionType {
+  BUY = 'BUY',
+  SELL = 'SELL',
+}
+
 export interface BuyParams {
   ticker: string;
   type: OptionType;
@@ -14,6 +19,7 @@ export interface BuyResponse {
   id: number;
   ticker: string;
   type: OptionType;
+  action: ActionType;
   contract_date: string;
   strike: number;
   num_contract: number;
@@ -33,6 +39,7 @@ export interface SellResponse {
   id: number;
   ticker: string;
   type: OptionType;
+  action: ActionType;
   contract_date: string;
   strike: number;
   num_contract: number;

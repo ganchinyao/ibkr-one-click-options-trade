@@ -10,6 +10,8 @@ import { BoughtItemProps } from './types';
 import Toast from 'react-native-toast-message';
 import { useAppDispatch } from '../../store';
 import { removeBuyOrder } from '../../store/contract/completedBuyOrderSlice';
+import { addToHistory } from '../../store/contract/historySlice';
+import { onSellFail, onSellSuccess } from '../../utils/order';
 
 const renderMetric = (purchasedPrice: number, num: number) => {
   return (
@@ -43,7 +45,7 @@ const BoughtItem: React.FC<BoughtItemProps> = ({ item }) => {
           <Text style={[styles.itemDefaultText]}>{`x${num_contract}`}</Text>
         </View>
         <Text style={[styles.itemDefaultText]}>{strike}</Text>
-        <Text style={[styles.itemDefaultText]}>{purchased_time}</Text>
+        <Text style={[styles.itemDefaultText]}>{purchased_time.split(' ')[1]}</Text>
         <View style={styles.metricContainer}>{metric.map((num) => renderMetric(purchased_price, num))}</View>
       </View>
       <View style={styles.ctaButtonContainer}>
@@ -58,20 +60,9 @@ const BoughtItem: React.FC<BoughtItemProps> = ({ item }) => {
                 strike,
                 num_contract,
               });
-              Toast.show({
-                type: 'success',
-                text1: `Successfully sold ${resp.num_contract}x ${resp.ticker}`,
-                visibilityTime: 3000,
-              });
-              dispatch(removeBuyOrder(resp.id));
-              printGreen('Sell succeed.', resp);
+              onSellSuccess(dispatch, resp);
             } catch (ex) {
-              Toast.show({
-                type: 'error',
-                text1: 'Failed to sell.',
-                visibilityTime: 3000,
-              });
-              printRed('Sell failed.', ex);
+              onSellFail(type, ex);
             }
           }}
           size={ButtonSize.big}

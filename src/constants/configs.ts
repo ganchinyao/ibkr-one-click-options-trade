@@ -2,7 +2,7 @@
  * The list of tickers that is allow to be traded.
  * Feel free to add or remove any tickers.
  */
-export const AVAILABLE_TICKERS = ['SPY', 'QQQ'];
+export const AVAILABLE_TICKERS = ['SPY', 'QQQ', 'NVDA', 'TSLA'];
 
 /**
  * Default list of USD to display for quick select
@@ -18,7 +18,7 @@ export const DTE = 3;
 /**
  * The default value in the TextInput for the USD to buy.
  */
-export const DEFAULT_USD_TO_BUY_AMT = 2000;
+export const DEFAULT_USD_TO_BUY_AMT = 1200;
 
 /**
  * AUTH_CODE is a string that is sent with each POST request to authenticate with the server.
