@@ -4,5 +4,5 @@ export interface ChipProps {
   text: string;
   isSelected?: boolean;
   onPress?: () => void;
-  containerStyle?: ViewStyle;
+  containerStyle?: ViewStyle | ViewStyle[];
 }

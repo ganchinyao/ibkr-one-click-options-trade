@@ -11,9 +11,25 @@ import Toast from 'react-native-toast-message';
 import { useAppDispatch } from '../../store';
 import { removeBuyOrder } from '../../store/contract/completedBuyOrderSlice';
 
+const renderMetric = (purchasedPrice: number, num: number) => {
+  return (
+    <View style={styles.metricRow} key={num}>
+      <Text style={[styles.itemMetricText, num === 10 ? styles.itemGreenText : undefined]}>{`+${num}%: $${(
+        purchasedPrice *
+        (1 + num / 100)
+      ).toFixed(2)}`}</Text>
+      <Text style={[styles.itemMetricText, num === 10 ? styles.itemRedText : undefined]}>{`-${num}%: $${(
+        purchasedPrice *
+        (1 - num / 100)
+      ).toFixed(2)}`}</Text>
+    </View>
+  );
+};
+
 const BoughtItem: React.FC<BoughtItemProps> = ({ item }) => {
   const { ticker, num_contract, purchased_price, purchased_time, strike, type, contract_date } = item;
   const dispatch = useAppDispatch();
+  const metric = [3, 5, 7, 8, 9, 10, 12, 14, 15, 16, 18, 20];
 
   return (
     <View style={styles.itemContainer}>
@@ -28,6 +44,7 @@ const BoughtItem: React.FC<BoughtItemProps> = ({ item }) => {
         </View>
         <Text style={[styles.itemDefaultText]}>{strike}</Text>
         <Text style={[styles.itemDefaultText]}>{purchased_time}</Text>
+        <View style={styles.metricContainer}>{metric.map((num) => renderMetric(purchased_price, num))}</View>
       </View>
       <View style={styles.ctaButtonContainer}>
         <Button

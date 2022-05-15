@@ -70,7 +70,7 @@ const App = () => {
         </View>
         <View style={styles.buttonsContainer}>
           <Button
-            text="BUY Call"
+            text="BUY CALL"
             onPress={async () => {
               try {
                 const resp = await buyRequest({
@@ -153,7 +153,9 @@ const styles = StyleSheet.create({
     marginVertical: 50,
     justifyContent: 'space-evenly',
   },
-  boughtListContainer: {},
+  boughtListContainer: {
+    flex: 1,
+  },
   boughtListTitle: {
     paddingTop: 10,
     fontSize: 16,

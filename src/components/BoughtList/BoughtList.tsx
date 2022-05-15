@@ -14,7 +14,7 @@ const BoughtList: React.FC<BoughtListProps> = ({ containerStyle }) => {
   const buyOrders = useAppSelector(selectBuyOrders);
 
   const renderList = () => {
-    return <FlatList data={buyOrders} renderItem={renderItem} />;
+    return <FlatList data={buyOrders} renderItem={renderItem} showsVerticalScrollIndicator={false} />;
   };
 
   return <View style={[styles.listContainer, containerStyle]}>{renderList()}</View>;

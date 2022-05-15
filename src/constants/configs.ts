@@ -5,6 +5,11 @@
 export const AVAILABLE_TICKERS = ['SPY', 'QQQ'];
 
 /**
+ * Default list of USD to display for quick select
+ */
+export const AVAILABLE_DEFAULT_USD = [800, 1000, 1200, 1400, 1600, 1800, 2000, 2200, 2400, 2600, 2800, 3000];
+
+/**
  * How many dte (Days to expirations) options to buy/sell. Corresponds to buying the nearest dated option that is >= now + DTE.
  * E.g. 3 means 3 days to expiration, so we will buy an option that is at least 3 days away from now.
  */

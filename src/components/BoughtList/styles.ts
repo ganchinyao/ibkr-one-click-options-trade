@@ -2,8 +2,11 @@ import { StyleSheet } from 'react-native';
 import Colors from '../../constants/Colors';
 
 export const styles = StyleSheet.create({
-  listContainer: {},
+  listContainer: {
+    flex: 1,
+  },
   itemContainer: {
+    flex: 1,
     flexDirection: 'row',
     paddingVertical: 10,
     borderBottomWidth: 0.5,
@@ -34,7 +37,17 @@ export const styles = StyleSheet.create({
     color: Colors.cyan500,
   },
   ctaButtonContainer: {
-    marginLeft: 10,
     justifyContent: 'center',
+  },
+  metricContainer: {
+    marginVertical: 5,
+  },
+  metricRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  itemMetricText: {
+    fontSize: 14,
+    color: Colors.white70,
   },
 });

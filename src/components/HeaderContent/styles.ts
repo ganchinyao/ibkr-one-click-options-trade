@@ -8,4 +8,7 @@ export const styles = StyleSheet.create({
   chipStyle: {
     marginRight: 10,
   },
+  usdChipStyle: {
+    minWidth: 40,
+  },
 });
