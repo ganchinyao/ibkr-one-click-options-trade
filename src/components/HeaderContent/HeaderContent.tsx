@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { updateTicker } from '../../api';
 import { getAvailableDefaultUSD, getAvailableTickers } from '../../utils';
@@ -8,6 +8,8 @@ import { styles } from './styles';
 import { HeaderContentProps } from './types';
 import { useAppSelector, useAppDispatch, setContractAmtUSD, selectContractAmtUSD } from '../../store';
 import { selectTicker, setTicker } from '../../store';
+import { Button, ButtonSize } from '../common/Button';
+import Colors from '../../constants/Colors';
 
 const HeaderContent: React.FC<HeaderContentProps> = ({}) => {
   // The `state` arg is correctly typed as `RootState` already
@@ -16,6 +18,11 @@ const HeaderContent: React.FC<HeaderContentProps> = ({}) => {
   const dispatch = useAppDispatch();
   const availableTickers = getAvailableTickers();
   const availableUSD = getAvailableDefaultUSD();
+  const [tickerInputText, setTicketInputText] = useState(selectedTicker);
+
+  useEffect(() => {
+    setTicketInputText(selectedTicker);
+  }, [selectedTicker]);
 
   const renderTickerChipsRow = () => {
     return (
@@ -40,13 +47,36 @@ const HeaderContent: React.FC<HeaderContentProps> = ({}) => {
 
   const renderTextInputs = () => {
     return (
-      <TextInputWithTitle
-        onChangeValue={(newValue) => {
-          console.log('## newValue:', newValue);
-          dispatch(setContractAmtUSD(newValue));
-        }}
-        titleText="USD to buy:"
-      />
+      <View style={styles.inputRow}>
+        <TextInputWithTitle
+          type="currency"
+          value={contractAmtUSD}
+          onChangeValue={(newValue: number) => {
+            dispatch(setContractAmtUSD(newValue));
+          }}
+          titleText="USD to buy:"
+        />
+        <View style={styles.tickerInputContainer}>
+          <TextInputWithTitle
+            value={tickerInputText}
+            onChangeValue={(newText: string) => {
+              setTicketInputText(newText);
+            }}
+            titleText="Select Ticker:"
+          />
+        </View>
+        <View style={styles.selectTickerButtonContainer}>
+          <Button
+            onPress={() => {
+              dispatch(setTicker(tickerInputText));
+            }}
+            text="Set"
+            size={ButtonSize.small}
+            buttonColor={Colors.orange500}
+            containerStyle={styles.selectTickerButton}
+          />
+        </View>
+      </View>
     );
   };
 

@@ -2,11 +2,9 @@ import { StyleSheet } from 'react-native';
 import Colors from '../../../constants/Colors';
 
 export const styles = StyleSheet.create({
-  container: {
-    marginVertical: 10,
-  },
+  container: {},
   titleText: {
-    fontSize: 14,
+    fontSize: 12,
     color: Colors.white70,
   },
   currencyInput: {
@@ -15,6 +13,7 @@ export const styles = StyleSheet.create({
     padding: 5,
     borderColor: Colors.green500,
     maxWidth: '40%',
+    minWidth: 120,
     marginTop: 2,
     color: Colors.white70,
   },

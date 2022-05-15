@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import Colors from '../../constants/Colors';
 
 export const styles = StyleSheet.create({
   container: {},
@@ -10,5 +11,19 @@ export const styles = StyleSheet.create({
   },
   usdChipStyle: {
     minWidth: 40,
+  },
+  inputRow: {
+    marginVertical: 10,
+    flexDirection: 'row',
+  },
+  tickerInputContainer: {
+    marginLeft: 10,
+  },
+  selectTickerButtonContainer: {
+    marginLeft: 5,
+    marginTop: 16,
+  },
+  selectTickerButton: {
+    height: 29,
   },
 });

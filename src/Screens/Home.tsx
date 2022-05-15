@@ -13,6 +13,7 @@ import { onBuyFail, onBuySuccess } from '../utils/order';
 const App = () => {
   const selectedTicker = useAppSelector(selectTicker);
   const contractAmtUSD = useAppSelector(selectContractAmtUSD);
+
   const dispatch = useAppDispatch();
 
   return (
