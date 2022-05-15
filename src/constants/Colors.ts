@@ -1,6 +1,9 @@
 export default {
   white: 'white',
+  white70: 'rgba(255, 255, 255, 0.7)',
+  white90: 'rgba(255, 255, 255, 0.9)',
   black: 'black',
+  background: '#212121',
   green500: '#4CAF50',
   green700: '#388E3C',
   bluegrey700: '#455A64',

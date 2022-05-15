@@ -1,16 +1,11 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import CurrencyInput from 'react-native-currency-input';
-import { selectContractAmtUSD, useAppDispatch, useAppSelector } from '../../../store';
+import { selectContractAmtUSD, useAppSelector } from '../../../store';
 import { styles } from './styles';
 import { TextInputWithTitleProps } from './types';
 
-const TextInputWithTitle: React.FC<TextInputWithTitleProps> = ({
-  onChangeValue,
-  titleText,
-  placeholder,
-  containerStyle,
-}) => {
+const TextInputWithTitle: React.FC<TextInputWithTitleProps> = ({ onChangeValue, titleText, containerStyle }) => {
   const contractAmtUSD = useAppSelector(selectContractAmtUSD);
 
   return (

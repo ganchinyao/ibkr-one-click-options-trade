@@ -19,7 +19,7 @@ const App = () => {
   const dispatch = useAppDispatch();
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.container}>
         <Text style={styles.selectionText}>Select Ticker:</Text>
 
@@ -137,9 +137,13 @@ const App = () => {
 };
 
 const styles = StyleSheet.create({
+  safeAreaView: {
+    backgroundColor: Colors.background,
+  },
   container: {
     paddingHorizontal: 15,
     height: '100%',
+    backgroundColor: Colors.background,
   },
   headerContentContainer: {
     marginVertical: 10,
@@ -154,11 +158,12 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     fontSize: 16,
     fontStyle: 'italic',
+    color: Colors.white70,
   },
   boughtList: {},
   selectionText: {
     fontSize: 14,
-    color: Colors.bluegrey700,
+    color: Colors.white70,
   },
 });
 

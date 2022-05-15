@@ -19,6 +19,7 @@ export const styles = StyleSheet.create({
   itemDefaultText: {
     fontSize: 18,
     paddingRight: 10,
+    color: Colors.white,
   },
   itemTextBold: {
     fontWeight: 'bold',

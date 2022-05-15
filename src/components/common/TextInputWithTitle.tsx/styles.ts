@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: 14,
-    color: Colors.bluegrey700,
+    color: Colors.white70,
   },
   currencyInput: {
     borderWidth: 1,
@@ -16,5 +16,6 @@ export const styles = StyleSheet.create({
     borderColor: Colors.green500,
     maxWidth: '40%',
     marginTop: 2,
+    color: Colors.white70,
   },
 });

@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
   },
   unselectedContainer: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.white90,
     borderColor: Colors.green700,
     borderWidth: 1,
   },
