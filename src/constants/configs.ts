@@ -5,9 +5,15 @@
 export const AVAILABLE_TICKERS = ['SPY', 'QQQ'];
 
 /**
+ * How many dte (Days to expirations) options to buy/sell. Corresponds to buying the nearest dated option that is >= now + DTE.
+ * E.g. 3 means 3 days to expiration, so we will buy an option that is at least 3 days away from now.
+ */
+export const DTE = 3;
+
+/**
  * The default value in the TextInput for the USD to buy.
  */
-export const DEFAULT_USD_TO_BUY_AMT = 1000;
+export const DEFAULT_USD_TO_BUY_AMT = 2000;
 
 /**
  * AUTH_CODE is a string that is sent with each POST request to authenticate with the server.

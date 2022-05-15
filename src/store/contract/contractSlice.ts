@@ -7,16 +7,12 @@ const availableTickers = getAvailableTickers();
 interface ContractState {
   selectedTicker: string;
   contractAmtUSD: number;
-  contractDate: string;
-  numContract: number;
 }
 
 // Define the initial state using that type
 const initialState: ContractState = {
   selectedTicker: availableTickers[0],
   contractAmtUSD: DEFAULT_USD_TO_BUY_AMT,
-  contractDate: '',
-  numContract: -1,
 };
 
 export const contractSlice = createSlice({
@@ -31,21 +27,13 @@ export const contractSlice = createSlice({
     setContractAmtUSD: (state, action: PayloadAction<number>) => {
       state.contractAmtUSD = action.payload;
     },
-    setContractDate: (state, action: PayloadAction<string>) => {
-      state.contractDate = action.payload;
-    },
-    setNumContract: (state, action: PayloadAction<number>) => {
-      state.numContract = action.payload;
-    },
   },
 });
 
-export const { setTicker, setContractAmtUSD, setContractDate, setNumContract } = contractSlice.actions;
+export const { setTicker, setContractAmtUSD } = contractSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectTicker = (state: RootState) => state.contract.selectedTicker;
 export const selectContractAmtUSD = (state: RootState) => state.contract.contractAmtUSD;
-export const selectContractDate = (state: RootState) => state.contract.contractDate;
-export const selectNumContract = (state: RootState) => state.contract.numContract;
 
 export default contractSlice.reducer;

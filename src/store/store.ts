@@ -1,9 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { contractReducer } from './contract';
+import { contractReducer, completedBuyOrderSlice } from './contract';
 
 export const store = configureStore({
   reducer: {
     contract: contractReducer,
+    buyOrders: completedBuyOrderSlice,
   },
 });
 

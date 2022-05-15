@@ -1,6 +1,6 @@
 import { URL } from '../constants';
 import { fetchMaker } from './fetchMaker';
-import { BuyParams, SellParams } from './types';
+import { BuyParams, BuyResponse, SellParams, SellResponse } from './types';
 
 export const getSample = async () => {
   const response = await fetchMaker.get('/d');
@@ -8,15 +8,16 @@ export const getSample = async () => {
 };
 
 export const buyRequest = async (params: BuyParams) => {
-  const response = await fetchMaker.post(URL.BUY.url, {
+  const response: BuyResponse = await fetchMaker.post(URL.BUY.url, {
     auth_code: URL.BUY.auth_code,
     ...params,
   });
   console.log('### response:', response);
+  return response;
 };
 
 export const sellRequest = async (params: SellParams) => {
-  const response = await fetchMaker.post(URL.SELL.url, {
+  const response: SellResponse = await fetchMaker.post(URL.SELL.url, {
     auth_code: URL.SELL.auth_code,
     ...params,
   });
