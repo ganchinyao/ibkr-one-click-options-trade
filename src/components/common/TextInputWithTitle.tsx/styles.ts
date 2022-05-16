@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
     padding: 5,
     borderColor: Colors.green500,
     maxWidth: '40%',
-    minWidth: 120,
+    minWidth: 100,
     marginTop: 2,
     color: Colors.white70,
   },

@@ -6,23 +6,24 @@ import { Chip } from '../common/Chip';
 import { TextInputWithTitle } from '../common/TextInputWithTitle.tsx';
 import { styles } from './styles';
 import { HeaderContentProps } from './types';
-import { useAppSelector, useAppDispatch, setContractAmtUSD, selectContractAmtUSD } from '../../store';
+import {
+  useAppSelector,
+  useAppDispatch,
+  setContractAmtUSD,
+  selectContractAmtUSD,
+  setDTE,
+  selectDTE,
+} from '../../store';
 import { selectTicker, setTicker } from '../../store';
-import { Button, ButtonSize } from '../common/Button';
-import Colors from '../../constants/Colors';
 
 const HeaderContent: React.FC<HeaderContentProps> = ({}) => {
   // The `state` arg is correctly typed as `RootState` already
   const selectedTicker = useAppSelector(selectTicker);
+  const dte = useAppSelector(selectDTE);
   const contractAmtUSD = useAppSelector(selectContractAmtUSD);
   const dispatch = useAppDispatch();
   const availableTickers = getAvailableTickers();
   const availableUSD = getAvailableDefaultUSD();
-  const [tickerInputText, setTicketInputText] = useState(selectedTicker);
-
-  useEffect(() => {
-    setTicketInputText(selectedTicker);
-  }, [selectedTicker]);
 
   const renderTickerChipsRow = () => {
     return (
@@ -58,22 +59,25 @@ const HeaderContent: React.FC<HeaderContentProps> = ({}) => {
         />
         <View style={styles.tickerInputContainer}>
           <TextInputWithTitle
-            value={tickerInputText}
+            value={selectedTicker}
             onChangeValue={(newText: string) => {
-              setTicketInputText(newText);
+              dispatch(setTicker(newText));
             }}
             titleText="Select Ticker:"
           />
         </View>
-        <View style={styles.selectTickerButtonContainer}>
-          <Button
-            onPress={() => {
-              dispatch(setTicker(tickerInputText));
+        <View style={styles.tickerInputContainer}>
+          <TextInputWithTitle
+            value={dte ? dte.toString() : ''}
+            onChangeValue={(newText: string) => {
+              if (newText === '') {
+                dispatch(setDTE());
+              } else {
+                dispatch(setDTE(Number(newText)));
+              }
             }}
-            text="Set"
-            size={ButtonSize.small}
-            buttonColor={Colors.orange500}
-            containerStyle={styles.selectTickerButton}
+            titleText="Select DTE:"
+            keyboardType="numeric"
           />
         </View>
       </View>

@@ -19,11 +19,4 @@ export const styles = StyleSheet.create({
   tickerInputContainer: {
     marginLeft: 10,
   },
-  selectTickerButtonContainer: {
-    marginLeft: 5,
-    marginTop: 16,
-  },
-  selectTickerButton: {
-    height: 29,
-  },
 });

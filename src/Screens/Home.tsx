@@ -2,16 +2,16 @@ import React from 'react';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { buyRequest } from '../api';
 import { HeaderContent } from '../components/HeaderContent';
-import { selectContractAmtUSD, selectTicker, useAppDispatch, useAppSelector } from '../store';
+import { selectContractAmtUSD, selectDTE, selectTicker, useAppDispatch, useAppSelector } from '../store';
 import { Button, ButtonSize } from '../components/common/Button';
 import Colors from '../constants/Colors';
-import { DTE } from '../constants';
 import { OptionType } from '../api/types';
 import { BoughtList } from '../components/BoughtList';
 import { onBuyFail, onBuySuccess } from '../utils/order';
 
 const App = () => {
   const selectedTicker = useAppSelector(selectTicker);
+  const dte = useAppSelector(selectDTE);
   const contractAmtUSD = useAppSelector(selectContractAmtUSD);
 
   const dispatch = useAppDispatch();
@@ -32,7 +32,7 @@ const App = () => {
                   ticker: selectedTicker,
                   type: OptionType.CALL,
                   amount_USD: contractAmtUSD,
-                  dte: DTE,
+                  dte: dte,
                 });
                 onBuySuccess(dispatch, resp);
               } catch (ex) {
@@ -49,7 +49,7 @@ const App = () => {
                   ticker: selectedTicker,
                   type: OptionType.PUT,
                   amount_USD: contractAmtUSD,
-                  dte: DTE,
+                  dte: dte,
                 });
                 onBuySuccess(dispatch, resp);
               } catch (ex) {

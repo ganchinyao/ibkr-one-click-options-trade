@@ -8,6 +8,7 @@ const TextInputWithTitle: React.FC<TextInputWithTitleProps> = ({
   value,
   onChangeValue,
   type,
+  keyboardType,
   titleText,
   containerStyle,
 }) => {
@@ -31,6 +32,7 @@ const TextInputWithTitle: React.FC<TextInputWithTitleProps> = ({
           onChangeText={(newText) => {
             onChangeValue(newText.toLocaleUpperCase());
           }}
+          keyboardType={keyboardType}
         />
       )}
     </View>
