@@ -36,7 +36,17 @@ export const styles = StyleSheet.create({
   itemCyanText: {
     color: Colors.cyan500,
   },
+  deleteIconContainer: {
+    alignSelf: 'flex-end',
+    position: 'absolute',
+    height: 32,
+    width: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1,
+  },
   ctaButtonContainer: {
+    flex: 1,
     justifyContent: 'center',
   },
   metricContainer: {

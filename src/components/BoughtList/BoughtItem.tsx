@@ -1,17 +1,14 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { sellRequest } from '../../api';
 import { OptionType } from '../../api/types';
 import Colors from '../../constants/Colors';
-import { printGreen, printRed } from '../../utils';
 import { Button, ButtonSize } from '../common/Button';
 import { styles } from './styles';
 import { BoughtItemProps } from './types';
-import Toast from 'react-native-toast-message';
 import { useAppDispatch } from '../../store';
-import { removeBuyOrder } from '../../store/contract/completedBuyOrderSlice';
-import { addToHistory } from '../../store/contract/historySlice';
-import { onSellFail, onSellSuccess } from '../../utils/order';
+import { onSellFail, onSellSuccess, removeBoughtItemRow } from '../../utils/order';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const renderMetric = (purchasedPrice: number, num: number) => {
   return (
@@ -48,26 +45,36 @@ const BoughtItem: React.FC<BoughtItemProps> = ({ item }) => {
         <Text style={[styles.itemDefaultText]}>{purchased_time.split(' ')[1]}</Text>
         <View style={styles.metricContainer}>{metric.map((num) => renderMetric(purchased_price, num))}</View>
       </View>
-      <View style={styles.ctaButtonContainer}>
-        <Button
-          text="Sell"
-          onPress={async () => {
-            try {
-              const resp = await sellRequest({
-                ticker,
-                type,
-                contract_date,
-                strike,
-                num_contract,
-              });
-              onSellSuccess(dispatch, resp);
-            } catch (ex) {
-              onSellFail(type, ex);
-            }
+      <View>
+        <TouchableOpacity
+          style={styles.deleteIconContainer}
+          onPress={() => {
+            removeBoughtItemRow(dispatch, item);
           }}
-          size={ButtonSize.big}
-          buttonColor={Colors.orange500}
-        />
+        >
+          <Ionicons name={'close-outline'} size={28} color={Colors.bluegrey700} />
+        </TouchableOpacity>
+        <View style={styles.ctaButtonContainer}>
+          <Button
+            text="Sell"
+            onPress={async () => {
+              try {
+                const resp = await sellRequest({
+                  ticker,
+                  type,
+                  contract_date,
+                  strike,
+                  num_contract,
+                });
+                onSellSuccess(dispatch, item, resp);
+              } catch (ex) {
+                onSellFail(type, ex);
+              }
+            }}
+            size={ButtonSize.big}
+            buttonColor={Colors.orange500}
+          />
+        </View>
       </View>
     </View>
   );

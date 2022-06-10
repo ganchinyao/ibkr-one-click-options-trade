@@ -6,7 +6,7 @@ import { AppDispatch, useAppDispatch, useAppSelector } from '../store';
 import { initHistory, selectHistoryList } from '../store/contract/historySlice';
 import { clearHistoryDataStore, getHistoryDataStore } from '../utils';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { ActionType, BuyResponse, SellResponse } from '../api/types';
+import { BuyResponse, SellResponse } from '../api/types';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { getDate, getPrice, getTime } from '../utils/order';
 
