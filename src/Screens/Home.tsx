@@ -2,17 +2,27 @@ import React from 'react';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { buyRequest } from '../api';
 import { HeaderContent } from '../components/HeaderContent';
-import { selectContractAmtUSD, selectDTE, selectTicker, useAppDispatch, useAppSelector } from '../store';
+import {
+  selectBuyMethod,
+  selectContractAmtUSD,
+  selectContractQuantity,
+  selectDTE,
+  selectTicker,
+  useAppDispatch,
+  useAppSelector,
+} from '../store';
 import { Button, ButtonSize } from '../components/common/Button';
 import Colors from '../constants/Colors';
 import { OptionType } from '../api/types';
 import { BoughtList } from '../components/BoughtList';
-import { onBuyFail, onBuySuccess } from '../utils/order';
+import { isBuyParamsInvalid, onBuyFail, onBuySuccess } from '../utils/order';
 
 const App = () => {
   const selectedTicker = useAppSelector(selectTicker);
   const dte = useAppSelector(selectDTE);
   const contractAmtUSD = useAppSelector(selectContractAmtUSD);
+  const contractQuantity = useAppSelector(selectContractQuantity);
+  const buyMethod = useAppSelector(selectBuyMethod);
 
   const dispatch = useAppDispatch();
 
@@ -28,11 +38,16 @@ const App = () => {
             text="BUY CALL"
             onPress={async () => {
               try {
+                if (isBuyParamsInvalid(contractAmtUSD, contractQuantity, selectedTicker, dte)) {
+                  return;
+                }
                 const resp = await buyRequest({
                   ticker: selectedTicker,
                   type: OptionType.CALL,
                   amount_USD: contractAmtUSD,
-                  dte: dte,
+                  contract_quantity: contractQuantity,
+                  buy_method: buyMethod,
+                  dte: dte as number,
                 });
                 onBuySuccess(dispatch, resp);
               } catch (ex) {
@@ -45,11 +60,16 @@ const App = () => {
             text="BUY PUT"
             onPress={async () => {
               try {
+                if (isBuyParamsInvalid(contractAmtUSD, contractQuantity, selectedTicker, dte)) {
+                  return;
+                }
                 const resp = await buyRequest({
                   ticker: selectedTicker,
                   type: OptionType.PUT,
                   amount_USD: contractAmtUSD,
-                  dte: dte,
+                  contract_quantity: contractQuantity,
+                  buy_method: buyMethod,
+                  dte: dte as number,
                 });
                 onBuySuccess(dispatch, resp);
               } catch (ex) {

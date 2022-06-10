@@ -6,6 +6,44 @@ import { appendToHistoryDataStore } from './datastore';
 import Toast from 'react-native-toast-message';
 import { printGreen, printRed } from './Logger';
 
+export const isBuyParamsInvalid = (
+  contractAmtUSD?: number,
+  contractQuantity?: number,
+  selectedTicker?: string,
+  dte?: number
+) => {
+  if (!contractAmtUSD || contractAmtUSD <= 0) {
+    Toast.show({
+      type: 'error',
+      text1: 'Please set USD to > $0.',
+      visibilityTime: 3000,
+    });
+    return true;
+  } else if (!contractQuantity || contractQuantity <= 0) {
+    Toast.show({
+      type: 'error',
+      text1: 'Please set number of Contract to at least 1',
+      visibilityTime: 3000,
+    });
+    return true;
+  } else if (!selectedTicker) {
+    Toast.show({
+      type: 'error',
+      text1: 'Please select a Ticker',
+      visibilityTime: 3000,
+    });
+    return true;
+  } else if (!dte) {
+    Toast.show({
+      type: 'error',
+      text1: 'Please select a DTE',
+      visibilityTime: 3000,
+    });
+    return true;
+  }
+  return false;
+};
+
 export const onBuySuccess = (dispatch: AppDispatch, resp: BuyResponse) => {
   Toast.show({
     type: 'success',
@@ -27,16 +65,20 @@ export const onBuyFail = (type: OptionType, exception: any) => {
   printRed(`Failed to buy ${type}.`, exception);
 };
 
-export const onSellSuccess = (dispatch: AppDispatch, resp: SellResponse) => {
+export const removeBoughtItemRow = (dispatch: AppDispatch, buyResponse: BuyResponse) => {
+  dispatch(removeBuyOrder(buyResponse));
+};
+
+export const onSellSuccess = (dispatch: AppDispatch, buyResponse: BuyResponse, sellResp: SellResponse) => {
   Toast.show({
     type: 'success',
-    text1: `Successfully sold ${resp.num_contract}x ${resp.ticker}`,
+    text1: `Successfully sold ${sellResp.num_contract}x ${sellResp.ticker}`,
     visibilityTime: 3000,
   });
-  dispatch(removeBuyOrder(resp.id));
-  dispatch(addToHistory(resp));
-  appendToHistoryDataStore(resp);
-  printGreen(`Successfully sell ${resp.type}.`, resp);
+  removeBoughtItemRow(dispatch, buyResponse);
+  dispatch(addToHistory(sellResp));
+  appendToHistoryDataStore(sellResp);
+  printGreen(`Successfully sell ${sellResp.type}.`, sellResp);
 };
 
 export const onSellFail = (type: OptionType, exception: any) => {

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import React, { useState } from 'react';
+import { Modal, ScrollView, TouchableOpacity, View } from 'react-native';
 import { updateTicker } from '../../api';
-import { getAvailableDefaultUSD, getAvailableTickers } from '../../utils';
+import { getAvailableDefaultContractAmount, getAvailableDefaultUSD, getAvailableTickers } from '../../utils';
 import { Chip } from '../common/Chip';
 import { TextInputWithTitle } from '../common/TextInputWithTitle.tsx';
 import { styles } from './styles';
@@ -13,17 +13,29 @@ import {
   selectContractAmtUSD,
   setDTE,
   selectDTE,
+  setContractQuantity,
+  selectContractQuantity,
+  selectBuyMethod,
+  setBuyMethod,
 } from '../../store';
 import { selectTicker, setTicker } from '../../store';
+import { Button, ButtonSize } from '../common/Button';
+import Colors from '../../constants/Colors';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { BuyMethod } from '../../api/types';
 
 const HeaderContent: React.FC<HeaderContentProps> = ({}) => {
   // The `state` arg is correctly typed as `RootState` already
   const selectedTicker = useAppSelector(selectTicker);
   const dte = useAppSelector(selectDTE);
   const contractAmtUSD = useAppSelector(selectContractAmtUSD);
+  const contractQuantity = useAppSelector(selectContractQuantity);
+  const buyMethod = useAppSelector(selectBuyMethod);
   const dispatch = useAppDispatch();
   const availableTickers = getAvailableTickers();
   const availableUSD = getAvailableDefaultUSD();
+  const availableContractAmount = getAvailableDefaultContractAmount();
+  const [isBuyMethodModalOpen, setIsBuyMethodModalOpen] = useState(false);
 
   const renderTickerChipsRow = () => {
     return (
@@ -48,39 +60,85 @@ const HeaderContent: React.FC<HeaderContentProps> = ({}) => {
 
   const renderTextInputs = () => {
     return (
-      <View style={styles.inputRow}>
-        <TextInputWithTitle
-          type="currency"
-          value={contractAmtUSD}
-          onChangeValue={(newValue: number) => {
-            dispatch(setContractAmtUSD(newValue));
-          }}
-          titleText="USD to buy:"
-        />
-        <View style={styles.tickerInputContainer}>
-          <TextInputWithTitle
-            value={selectedTicker}
-            onChangeValue={(newText: string) => {
-              dispatch(setTicker(newText));
-            }}
-            titleText="Select Ticker:"
-          />
+      <View style={styles.overallInputContainer}>
+        <View style={styles.inputRow}>
+          <View style={styles.inputContainer}>
+            <TextInputWithTitle
+              value={selectedTicker}
+              onChangeValue={(newText: string) => {
+                dispatch(setTicker(newText));
+              }}
+              titleText="Select Ticker:"
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <TextInputWithTitle
+              value={dte ? dte.toString() : ''}
+              onChangeValue={(newText: string) => {
+                if (newText === '') {
+                  dispatch(setDTE());
+                } else {
+                  dispatch(setDTE(Number(newText)));
+                }
+              }}
+              titleText="Select DTE:"
+              keyboardType="numeric"
+            />
+          </View>
         </View>
-        <View style={styles.tickerInputContainer}>
-          <TextInputWithTitle
-            value={dte ? dte.toString() : ''}
-            onChangeValue={(newText: string) => {
-              if (newText === '') {
-                dispatch(setDTE());
-              } else {
-                dispatch(setDTE(Number(newText)));
-              }
+        <View style={styles.inputRow}>
+          <View style={styles.inputContainer}>
+            {buyMethod === BuyMethod.USD ? (
+              <TextInputWithTitle
+                type={'currency'}
+                value={contractAmtUSD}
+                onChangeValue={(newValue: number) => {
+                  dispatch(setContractAmtUSD(newValue));
+                }}
+                titleText={'USD to buy:'}
+              />
+            ) : (
+              <TextInputWithTitle
+                type={'text'}
+                value={contractQuantity.toString()}
+                onChangeValue={(newValue: number) => {
+                  dispatch(setContractQuantity(newValue));
+                }}
+                titleText={'Contract to buy'}
+              />
+            )}
+          </View>
+
+          <Button
+            text={buyMethod === BuyMethod.CONTRACT ? 'Contract' : 'USD'}
+            onPress={() => {
+              setIsBuyMethodModalOpen(true);
             }}
-            titleText="Select DTE:"
-            keyboardType="numeric"
+            size={ButtonSize.small}
+            containerStyle={styles.buyMethodContainer}
+            textStyle={styles.buyMethodText}
+            buttonColor={Colors.bluegrey700}
           />
         </View>
       </View>
+    );
+  };
+
+  const renderContractAmtChipsRow = () => {
+    return (
+      <ScrollView style={styles.chipContainer} horizontal showsHorizontalScrollIndicator={false}>
+        {availableContractAmount.map((contractAmt) => (
+          <Chip
+            key={contractAmt}
+            isSelected={contractQuantity === contractAmt}
+            text={`${contractAmt}`}
+            onPress={async () => {
+              dispatch(setContractQuantity(contractAmt));
+            }}
+            containerStyle={[styles.chipStyle, styles.contractChipStyle]}
+          />
+        ))}
+      </ScrollView>
     );
   };
 
@@ -101,11 +159,45 @@ const HeaderContent: React.FC<HeaderContentProps> = ({}) => {
       </ScrollView>
     );
   };
+
   return (
-    <View style={styles.container}>
+    <View>
       {renderTickerChipsRow()}
       {renderTextInputs()}
-      {renderUSDChipsRow()}
+      {buyMethod === BuyMethod.USD ? renderUSDChipsRow() : renderContractAmtChipsRow()}
+      <Modal animationType="slide" transparent={true} visible={isBuyMethodModalOpen}>
+        <View style={styles.buyMethodModalContainer}>
+          <View style={styles.buyMethodModal}>
+            <TouchableOpacity
+              style={styles.buyMethodTouchableOpacity}
+              onPress={() => {
+                setIsBuyMethodModalOpen(false);
+              }}
+            >
+              <Ionicons name={'close-outline'} size={34} color={Colors.white} />
+            </TouchableOpacity>
+            <Button
+              text="Use Contracts to buy"
+              onPress={() => {
+                dispatch(setBuyMethod(BuyMethod.CONTRACT));
+                setIsBuyMethodModalOpen(false);
+              }}
+              size={ButtonSize.small}
+              containerStyle={styles.buyMethodContractButton}
+            />
+            <Button
+              text="Use USD to buy"
+              onPress={() => {
+                dispatch(setBuyMethod(BuyMethod.USD));
+                setIsBuyMethodModalOpen(false);
+              }}
+              size={ButtonSize.small}
+              buttonColor={Colors.orange500}
+              containerStyle={styles.buyMethodUSDButton}
+            />
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };

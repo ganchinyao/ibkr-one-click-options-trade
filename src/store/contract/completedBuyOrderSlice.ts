@@ -18,8 +18,10 @@ export const completedBuyOrderSlice = createSlice({
     addBuyOrder: (state, action: PayloadAction<BuyResponse>) => {
       state.buyOrders.push(action.payload);
     },
-    removeBuyOrder: (state, action: PayloadAction<number>) => {
-      state.buyOrders = state.buyOrders.filter((order) => order.id !== action.payload);
+    removeBuyOrder: (state, action: PayloadAction<BuyResponse>) => {
+      console.log('## state:', state);
+      console.log('## BuyResponse:', action.payload);
+      state.buyOrders = state.buyOrders.filter((order) => order.purchased_time !== action.payload.purchased_time);
     },
   },
 });

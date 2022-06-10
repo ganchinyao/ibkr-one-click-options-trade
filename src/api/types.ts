@@ -8,10 +8,17 @@ export enum ActionType {
   SELL = 'SELL',
 }
 
+export enum BuyMethod {
+  CONTRACT = 'CONTRACT',
+  USD = 'USD',
+}
+
 export interface BuyParams {
   ticker: string;
   type: OptionType;
   amount_USD: number;
+  contract_quantity: number;
+  buy_method: BuyMethod;
   dte: number;
 }
 
