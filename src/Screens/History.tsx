@@ -32,8 +32,8 @@ const onCopyAllToClipboardPress = (historyList: (BuyResponse | SellResponse)[]) 
     const date = getDate(historyItem);
     const time = getTime(historyItem);
     const price = getPrice(historyItem);
-    const { ticker, num_contract, type, action } = historyItem;
-    const newEntry = `${date} ${time} ${ticker} ${type} ${price} ${num_contract} ${action}\n`;
+    const { ticker, num_contract, type, action, strike } = historyItem;
+    const newEntry = `${date} ${time} ${ticker} ${strike} ${type} ${price} ${num_contract} ${action}\n`;
     allEntries += newEntry;
   });
   Clipboard.setString(allEntries);

@@ -45,3 +45,16 @@ export const updateTicker = async (newTicker: string) => {
     ticker: newTicker,
   })) as string;
 };
+
+/**
+ * Send a request to get the current price of Ticker.
+ * @returns the current price of ticker, in string. E.g. '400.10'
+ */
+export const getPriceOfTicker = async (ticker: string) => {
+  const response = (await fetchMaker.post(URL.GET_PRICE_OF_TICKER.url, {
+    auth_code: URL.GET_PRICE_OF_TICKER.auth_code,
+    ticker,
+  })) as string;
+  console.log('### response:', response);
+  return response;
+};

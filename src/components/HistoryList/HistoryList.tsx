@@ -4,7 +4,7 @@ import { styles } from './styles';
 import { HistoryListProps } from './types';
 import { useAppSelector } from '../../store';
 import HistoryItem from './HistoryItem';
-import { ActionType, BuyResponse, SellResponse } from '../../api/types';
+import { BuyResponse, SellResponse } from '../../api/types';
 import { selectHistoryIsRefreshing } from '../../store/contract/historySlice';
 import { getDateTime } from '../../utils/order';
 import Colors from '../../constants/Colors';

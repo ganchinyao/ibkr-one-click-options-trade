@@ -30,11 +30,11 @@ const HistoryItem: React.FC<HistoryItemProps> = ({ item }) => {
 
         <View style={styles.itemRow}>
           <Text style={[getDefaultTextStyle(), styles.itemTextBold]}>{ticker}</Text>
+          <Text style={getDefaultTextStyle()}>{strike}</Text>
           <Text style={getDefaultTextStyle()}>{type}</Text>
           <Text style={getDefaultTextStyle()}>{`$${price}`}</Text>
           <Text style={getDefaultTextStyle()}>{`x${num_contract}`}</Text>
         </View>
-        <Text style={getDefaultTextStyle()}>{strike}</Text>
       </View>
       <View style={styles.ctaButtonContainer}>
         <Button

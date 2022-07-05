@@ -13,6 +13,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import History from './src/Screens/History';
+import Settings from './src/Screens/Settings';
 
 const toastConfig = {
   /*
@@ -87,6 +88,10 @@ const Root = () => (
                   break;
                 case 'History':
                   iconName = 'list-outline';
+                  break;
+                case 'Settings':
+                  iconName = 'settings-outline';
+                  break;
               }
 
               return <Ionicons name={iconName} size={size} color={color} />;
@@ -96,6 +101,7 @@ const Root = () => (
       >
         <Tab.Screen name="Home" component={Home} />
         <Tab.Screen name="History" component={History} />
+        <Tab.Screen name="Settings" component={Settings} />
       </Tab.Navigator>
     </NavigationContainer>
     <Toast config={toastConfig} />

@@ -54,4 +54,8 @@ export const URL = {
     url: '/update_current_ticker',
     auth_code: 'Uberdragon Bajula',
   },
+  GET_PRICE_OF_TICKER: {
+    url: '/price',
+    auth_code: 'Miraculous Snare',
+  },
 };
