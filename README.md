@@ -1,13 +1,5 @@
 # Introduction
 
-<img src="./screenshots/gif1.gif" width=500 />
-
-<img src="./screenshots/screenshot1.png" width=500 />
-
-<img src="./screenshots/screenshot2.png" width=500 />
-
-<img src="./screenshots/screenshot3.png" width=500 />
-
 Quickly buy and sell at-the-money `Call` or `Put` options at market price with just one click on a mobile app, without having to navigate through options chains. This app utilizes client-side React Native code and server-side python code to execute orders through TWS or IB gateway.
 
 One of the biggest challenges in day-trading is being able to quickly enter and exit trades. When anticipating a change in the price of a particular ticker, finding the at-the-money options strike, placing a quantity, and hitting the send button can take valuable seconds, and closing a trade can be just as time-consuming. This app eliminates this problem by allowing traders to quickly execute trades without the need to navigate through options chains, giving them more time to focus on chart reading and making informed decisions.
@@ -15,6 +7,16 @@ One of the biggest challenges in day-trading is being able to quickly enter and 
 The goal of this app is to make quick and profitable trades by allowing traders to enter and exit positions fast. Traders can then take advantage of market fluctuations, and make the most of their time and money.
 
 This repository contains the client-side code for the React Native app and the server-side code running on python that executes buy/sell orders through TWS or IB gateway.
+
+<p align="middle">
+  <img src="./screenshots/gif1.gif" width=400 />
+</p>
+
+<p float="left">
+  <img src="./screenshots/screenshot1.png" width=300 />
+  <img src="./screenshots/screenshot2.png" width=300 />
+  <img src="./screenshots/screenshot3.png" width=300 />
+</p>
 
 
 # Features
@@ -57,9 +59,9 @@ Optional:
 # Limitations
 
 1. You must have a running TWS or IB gateway on your computer for the trade to go through.
-2. You must have an account with real-time market subscription
-3. Only market buy/sell orders are supported at this moment
-4. Only at-the-money option strikes are supported at this moment
+2. You must have an account with real-time market subscription.
+3. Only market buy/sell orders are supported at this moment.
+4. Only at-the-money option strikes are supported at this moment.
 
 # Configurations
 
