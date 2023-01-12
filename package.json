@@ -6,7 +6,8 @@
     "upgrade": "react-native upgrade",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "start": "react-native start",
+    "start-app": "react-native start",
+    "start-server": "python3 ./python-server/main.py",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "unlink": "react-native unlink react-native-vector-icons"
