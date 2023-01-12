@@ -2,11 +2,6 @@ import { URL } from '../constants';
 import { fetchMaker } from './fetchMaker';
 import { BuyParams, BuyResponse, SellParams, SellResponse } from './types';
 
-export const getSample = async () => {
-  const response = await fetchMaker.get('/d');
-  console.log('### response:', response);
-};
-
 export const buyRequest = async (params: BuyParams) => {
   const response: BuyResponse = await fetchMaker.post(URL.BUY.url, {
     auth_code: URL.BUY.auth_code,
