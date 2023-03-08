@@ -1,3 +1,5 @@
-ib_insync
+ib_insync==0.9.70
 flask
 termcolor
+pytz
+quart
