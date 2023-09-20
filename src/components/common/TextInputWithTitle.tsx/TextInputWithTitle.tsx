@@ -11,10 +11,11 @@ const TextInputWithTitle: React.FC<TextInputWithTitleProps> = ({
   keyboardType,
   titleText,
   containerStyle,
+  titleTextStyle,
 }) => {
   return (
     <View style={[styles.container, containerStyle]}>
-      <Text style={styles.titleText}>{titleText}</Text>
+      <Text style={[styles.titleText, titleTextStyle]}>{titleText}</Text>
       {type === 'currency' ? (
         <CurrencyInput
           value={value as number}

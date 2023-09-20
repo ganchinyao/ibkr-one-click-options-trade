@@ -1,4 +1,4 @@
-import { KeyboardTypeOptions, ViewStyle } from 'react-native';
+import { KeyboardTypeOptions, TextStyle, ViewStyle } from 'react-native';
 
 export interface TextInputWithTitleProps {
   value: string | number;
@@ -8,4 +8,5 @@ export interface TextInputWithTitleProps {
   titleText?: string;
   placeholder?: string;
   containerStyle?: ViewStyle;
+  titleTextStyle?: TextStyle;
 }

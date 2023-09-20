@@ -13,6 +13,11 @@ export enum BuyMethod {
   USD = 'USD',
 }
 
+export enum OrderType {
+  LIMIT = 'LIMIT', // Note that LIMIT doesn't mean you can set price (for my usage). LIMIT means set limit order at mid_price of the contract.
+  MARKET = 'MARKET',
+}
+
 export interface BuyParams {
   ticker: string;
   type: OptionType;
@@ -20,6 +25,8 @@ export interface BuyParams {
   contract_quantity: number;
   buy_method: BuyMethod;
   dte: number;
+  order_type?: OrderType;
+  exchange?: string;
 }
 
 export interface BuyResponse {
@@ -40,6 +47,8 @@ export interface SellParams {
   contract_date: string;
   strike: number;
   num_contract: number;
+  order_type?: OrderType;
+  exchange?: string;
 }
 
 export interface SellResponse {

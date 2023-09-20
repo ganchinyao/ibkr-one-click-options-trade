@@ -6,9 +6,10 @@ import Colors from '../../constants/Colors';
 import { Button, ButtonSize } from '../common/Button';
 import { styles } from './styles';
 import { BoughtItemProps } from './types';
-import { useAppDispatch } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../store';
 import { onSellFail, onSellSuccess, removeBoughtItemRow } from '../../utils/order';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { selectExchange, selectOrderType } from '../../store/contract/settingSlice';
 
 const renderMetric = (purchasedPrice: number, num: number) => {
   return (
@@ -29,6 +30,8 @@ const BoughtItem: React.FC<BoughtItemProps> = ({ item }) => {
   const { ticker, num_contract, purchased_price, purchased_time, strike, type, contract_date } = item;
   const dispatch = useAppDispatch();
   const metric = [3, 5, 7, 8, 9, 10, 12, 14, 15, 16, 18, 20];
+  const orderType = useAppSelector(selectOrderType);
+  const exchange = useAppSelector(selectExchange);
 
   return (
     <View style={styles.itemContainer}>
@@ -65,6 +68,8 @@ const BoughtItem: React.FC<BoughtItemProps> = ({ item }) => {
                   contract_date,
                   strike,
                   num_contract,
+                  order_type: orderType,
+                  exchange,
                 });
                 onSellSuccess(dispatch, item, resp);
               } catch (ex) {
