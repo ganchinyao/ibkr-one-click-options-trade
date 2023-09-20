@@ -99,6 +99,7 @@ const App = () => {
 const styles = StyleSheet.create({
   safeAreaView: {
     backgroundColor: Colors.background,
+    paddingTop: 5,
   },
   container: {
     paddingHorizontal: 15,

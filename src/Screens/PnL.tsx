@@ -62,6 +62,7 @@ const PnL = () => {
 const styles = StyleSheet.create({
   safeAreaView: {
     backgroundColor: Colors.background,
+    paddingTop: 5,
   },
   titleRow: {
     flexDirection: 'row',
