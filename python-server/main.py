@@ -99,7 +99,7 @@ class GreenRocket:
         index = next(x[0] for x in enumerate(dtelist) if x[1] >= 0)
         return expirations[index]
 
-    async def _get_buy_contract(self, ticker, ticker_current_price, strikes, contract_date, type):
+    async def _get_buy_contract(self, ticker, ticker_current_price, strikes, contract_date, type, exchange):
         """
         Create and return a buy contract that is placed At The Money (ATM).
 
@@ -109,7 +109,7 @@ class GreenRocket:
         # Loop through all possible strikes in strikes to find a combination of strikes that belong to the ATM of that particular contract_date
         while True:
             contract = Option(ticker, contract_date,
-                              strikes[index], type, 'SMART')
+                              strikes[index], type, exchange)
             qualify_contract = await self.ib.qualifyContractsAsync(contract)
             if qualify_contract:
                 print('found')
@@ -120,11 +120,36 @@ class GreenRocket:
         return (contract, qualify_contract)
 
     async def _get_bid_ask_price(self, qualify_contract):
-        tickers = await self.ib.reqTickersAsync(*qualify_contract)
-        bid = tickers[0].bid
-        ask = tickers[0].ask
+        ticker = self.ib.reqMktData(*qualify_contract)
+        start_time = datetime.now()
+        while str(ticker.bid) == 'nan':
+            # Must wait for the ticker to be filled
+            self.ib.sleep(0.01)
+            if (datetime.now() - start_time).total_seconds() > 5:
+                error_msg = 'Timed out waiting to get mid price'
+                print_error_msg(error_msg)
+        bid = ticker.bid
+        ask = ticker.ask
         return (bid, ask)
 
+    async def _get_mid_price(self, qualify_contract):
+        (bid, ask) = await self._get_bid_ask_price(qualify_contract)
+        mid_price = round((bid + ask) / 2, 2)
+        return mid_price
+
+    def _place_order(self, contract, option_order, order_type):
+        order = self.ib.placeOrder(contract, option_order)
+        start_time = datetime.now()
+        timeout = 10 if order_type == 'LIMIT' else 5
+        while order.orderStatus.status != 'Filled':
+            self.ib.sleep(0.1)
+            if (datetime.now() - start_time).total_seconds() > timeout:
+                error_msg = 'Timed out placing order. Order is cancelled'
+                # Cancel the limit order if it is not filled
+                if order_type == 'LIMIT':
+                    self.ib.cancelOrder(order.order)
+                raise Exception(error_msg)
+        return order
     # -------------------------- End of All private methods
 
     async def get_current_price_of_ticker(self, ticker):
@@ -144,13 +169,13 @@ class GreenRocket:
         """
         return datetime.now(pytz.timezone('US/Eastern')).strftime(format)
 
-    async def buy(self, ticker, type, amountUSD, dte, num_contract, buy_method):
+    async def buy(self, ticker, type, dte, amountUSD, num_contract, buy_method, exchange, order_type):
         """
-        Buy option NOW at midprice.
+        Buy option.
         """
         try:
-            print('buy params:', ticker, type, amountUSD,
-                  dte, num_contract, buy_method)
+            print('buy params:', ticker, type, dte, amountUSD,
+                  num_contract, buy_method, exchange, order_type)
             with await self.ib.connectAsync():
                 stk = Stock(ticker, 'SMART', 'USD')
                 await self.ib.qualifyContractsAsync(stk)
@@ -164,44 +189,37 @@ class GreenRocket:
                 contract_date = self._get_desired_contract_date(
                     expirations, dte)
                 (contract, qualify_contract) = await self._get_buy_contract(
-                    ticker, ticker_current_price, strikes, contract_date, type)
-                # (bid, ask) = await self._get_bid_ask_price(qualify_contract)
-                # mid_price = round((bid + ask) / 2, 2)
-                # print('#mid_price:', mid_price)
-                # if (mid_price * 100) > amountUSD:
-                # error_msg = 'Not enough money to even 1 purchase ATM contract'
-                # print_error_msg(error_msg)
-                # return make_error(error_msg)
-                # num_contract = floor(amountUSD / (mid_price * 100))
+                    ticker, ticker_current_price, strikes, contract_date, type, exchange)
 
-                # option_order = LimitOrder('BUY', num_contract, mid_price)
-                # order = self.ib.placeOrder(contract, option_order)
-                # purchased_price = mid_price,
-                # print('#order:', order)
-
+                # Buy in terms of quantity of option
                 if buy_method == 'CONTRACT':
-                    option_order = MarketOrder('BUY', num_contract)
-                    order = self.ib.placeOrder(contract, option_order)
-                    start_time = datetime.now()
-                    while order.orderStatus.status != 'Filled':
-                        self.ib.sleep(0)
-                        if (datetime.now() - start_time).total_seconds() > 5:
-                            error_msg = 'Timed out placing order'
-                            print_error_msg(error_msg)
-                            return make_error(error_msg)
-                    purchased_price = order.orderStatus.avgFillPrice
+                    if order_type == "LIMIT":
+                        mid_price = await self._get_mid_price(qualify_contract)
+                        option_order = LimitOrder(
+                            'BUY', num_contract, mid_price)
+                    else:
+                        option_order = MarketOrder('BUY', num_contract)
+                    filled_order = self._place_order(
+                        contract, option_order, order_type)
+                    purchased_price = filled_order.orderStatus.avgFillPrice
+                    commission = round(filled_order.fills[0].commissionReport.commission, 2)
+                    PnL = round(filled_order.fills[0].commissionReport.realizedPNL, 2) # PnL already accounts for commission fees
+                # Buy in terms of total amount of USD of options
                 else:
-                    (bid, ask) = await self._get_bid_ask_price(qualify_contract)
-                    mid_price = round((bid + ask) / 2, 2)
+                    mid_price = await self._get_mid_price(qualify_contract)
                     if (mid_price * 100) > amountUSD:
                         error_msg = 'Not enough money to even 1 purchase ATM contract'
                         print_error_msg(error_msg)
                         return make_error(error_msg)
                     num_contract = floor(amountUSD / (mid_price * 100))
-                    option_order = LimitOrder('BUY', num_contract, mid_price)
-                    order = self.ib.placeOrder(contract, option_order)
-                    purchased_price = mid_price,
-
+                    if order_type == "LIMIT":
+                        option_order = LimitOrder(
+                            'BUY', num_contract, mid_price)
+                    else:
+                        option_order = MarketOrder('BUY', num_contract)
+                    filled_order = self._place_order(
+                        contract, option_order, order_type)
+                    purchased_price = filled_order.orderStatus.avgFillPrice
                 resp = {
                     'id': contract.conId,
                     'ticker': ticker,
@@ -220,40 +238,26 @@ class GreenRocket:
             print_error_msg(ex)
             return make_error(str(ex))
 
-    async def sell(self, ticker, type, contract_date, strike, num_contract, orderType='MARKET'):
+    async def sell(self, ticker, type, contract_date, strike, num_contract, exchange, order_type):
         try:
             print('sell params:', ticker, type,
-                  contract_date, strike, num_contract)
+                  contract_date, strike, num_contract, exchange, order_type)
             with await self.ib.connectAsync():
                 stk = Stock(ticker, 'SMART', 'USD')
                 await self.ib.qualifyContractsAsync(stk)
-                contract = Option(ticker, contract_date, strike, type, 'SMART')
-                if orderType == 'LIMIT':
+                contract = Option(ticker, contract_date,
+                                  strike, type, exchange)
+                if order_type == 'LIMIT':
                     qualify_contract = await self.ib.qualifyContractsAsync(contract)
-                    (bid, ask) = await self._get_bid_ask_price(qualify_contract)
-                    mid_price = round((bid + ask) / 2, 2)
+                    mid_price = await self._get_mid_price(qualify_contract)
                     option_order = LimitOrder('SELL', num_contract, mid_price)
-                    order = self.ib.placeOrder(contract, option_order)
-                    start_time = datetime.now()
-                    while order.orderStatus.status != 'Filled':
-                        self.ib.sleep(0)
-                        if (datetime.now() - start_time).total_seconds() > 5:
-                            error_msg = 'Timed out placing order'
-                            print_error_msg(error_msg)
-                            return make_error(error_msg)
-                    sell_price = order.orderStatus.avgFillPrice,
                 else:
                     option_order = MarketOrder('SELL', num_contract)
-                    order = self.ib.placeOrder(contract, option_order)
-                    start_time = datetime.now()
-                    while order.orderStatus.status != 'Filled':
-                        self.ib.sleep(0)
-                        if (datetime.now() - start_time).total_seconds() > 5:
-                            error_msg = 'Timed out placing order'
-                            print_error_msg(error_msg)
-                            return make_error(error_msg)
-                    sell_price = order.orderStatus.avgFillPrice,
-
+                filled_order = self._place_order(
+                    contract, option_order, order_type)
+                sell_price = filled_order.orderStatus.avgFillPrice,
+                commission = round(filled_order.fills[0].commissionReport.commission, 2)
+                PnL = round(filled_order.fills[0].commissionReport.realizedPNL, 2)
                 resp = {
                     'id': contract.conId,
                     'ticker': ticker,
@@ -306,7 +310,7 @@ async def before_request_func():
 async def hello():
     print("At / route")
     print(colored('hello', 'red'), colored('world', 'green'))
-    return Response(status=200)
+    return Response('hello world', status=200)
 
 
 @ app.route(URL['BUY']['url'], methods=['POST'])
@@ -314,8 +318,10 @@ async def route_buy():
     print("At " + URL['BUY']['url'] + " route")
     raw = await request.get_data()
     data = json.loads(raw.decode())
+    exchange = data.get('exchange', 'SMART')
+    order_type = data.get('order_type', 'MARKET')
     resp = await greenrocket.buy(
-        data['ticker'], data['type'], data['amount_USD'], data['dte'], data['contract_quantity'], data['buy_method'])
+        data['ticker'], data['type'], data['dte'], data['amount_USD'], data['contract_quantity'], data['buy_method'], exchange, order_type)
     if has_error(resp):
         return Response(get_error(resp), status=500)
     return resp
@@ -326,8 +332,10 @@ async def route_sell():
     print("At " + URL['SELL']['url'] + " route")
     raw = await request.get_data()
     data = json.loads(raw.decode())
+    exchange = data.get('exchange', 'SMART')
+    order_type = data.get('order_type', 'MARKET')
     resp = await greenrocket.sell(
-        data['ticker'], data['type'], data['contract_date'], data['strike'], data['num_contract'])
+        data['ticker'], data['type'], data['contract_date'], data['strike'], data['num_contract'], exchange, order_type)
     if has_error(resp):
         return Response(get_error(resp), status=500)
     return resp
