@@ -38,6 +38,7 @@ export interface BuyResponse {
   strike: number;
   num_contract: number;
   purchased_price: number;
+  commission: number;
   purchased_time: string;
 }
 
@@ -61,4 +62,13 @@ export interface SellResponse {
   num_contract: number;
   sell_price: number;
   sell_time: string;
+  commission: number;
+  pnl: number;
 }
+
+export type Summary = {
+  date: string;
+  totalCommission: number;
+  totalPnl: number;
+  numTrades: number;
+};

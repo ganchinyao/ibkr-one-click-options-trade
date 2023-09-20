@@ -1,4 +1,4 @@
-import { ActionType, BuyResponse, OptionType, SellResponse } from '../api/types';
+import { ActionType, BuyResponse, OptionType, SellResponse, Summary } from '../api/types';
 import { AppDispatch } from '../store';
 import { addBuyOrder, removeBuyOrder } from '../store/contract/completedBuyOrderSlice';
 import { addToHistory } from '../store/contract/historySlice';
@@ -116,4 +116,40 @@ export const getPrice = (item: BuyResponse | SellResponse) => {
     price = (item as SellResponse).sell_price;
   }
   return price;
+};
+
+export const getDailySummary = (historyList: (BuyResponse | SellResponse)[]): Summary[] => {
+  const summaryMap: { [date: string]: { totalCommission: number; totalPnl: number; numTrades: number } } = {};
+
+  for (const transaction of historyList) {
+    let date: string;
+    if ('purchased_time' in transaction) {
+      date = transaction.purchased_time.split(' ')[0];
+    } else {
+      date = transaction.sell_time.split(' ')[0];
+    }
+
+    if (!summaryMap[date]) {
+      summaryMap[date] = { totalCommission: 0, totalPnl: 0, numTrades: 0 };
+    }
+
+    summaryMap[date].totalCommission += transaction.commission;
+    summaryMap[date].numTrades += 1;
+
+    if ('pnl' in transaction) {
+      summaryMap[date].totalPnl += transaction.pnl;
+    }
+  }
+
+  const result: Summary[] = [];
+  for (const [date, values] of Object.entries(summaryMap)) {
+    result.push({
+      date,
+      totalCommission: +values.totalCommission.toFixed(2),
+      totalPnl: +values.totalPnl.toFixed(2),
+      numTrades: values.numTrades,
+    });
+  }
+
+  return result;
 };

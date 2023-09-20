@@ -12,7 +12,7 @@ const HistoryItem: React.FC<HistoryItemProps> = ({ item }) => {
   const date = getDate(item);
   const time = getTime(item);
   const price = getPrice(item);
-  const { ticker, num_contract, strike, type, action } = item;
+  const { ticker, num_contract, strike, type, action, commission } = item;
   const getDefaultTextStyle = () => {
     const textStyle: TextStyle[] = [styles.itemDefaultText];
     if (action === ActionType.BUY) {
@@ -26,8 +26,10 @@ const HistoryItem: React.FC<HistoryItemProps> = ({ item }) => {
   return (
     <View style={styles.itemContainer}>
       <View style={styles.itemColumn}>
-        <Text style={getDefaultTextStyle()}>{`${date}  ${time}`}</Text>
-
+        <View style={styles.firstRowContainer}>
+          <Text style={getDefaultTextStyle()}>{`${date}  ${time}`}</Text>
+          <Text style={styles.itemCommissionText}>{`com: $${commission}`}</Text>
+        </View>
         <View style={styles.itemRow}>
           <Text style={[getDefaultTextStyle(), styles.itemTextBold]}>{ticker}</Text>
           <Text style={getDefaultTextStyle()}>{strike}</Text>

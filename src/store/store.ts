@@ -1,6 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { contractReducer, completedBuyOrderSlice, historySlice } from './contract';
-import settingSlice from './contract/settingSlice';
+import { contractReducer, completedBuyOrderSlice, historySlice, settingSlice } from './contract';
 
 export const store = configureStore({
   reducer: {

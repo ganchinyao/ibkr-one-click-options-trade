@@ -16,22 +16,16 @@ export const styles = StyleSheet.create({
   itemColumn: {
     flexDirection: 'column',
   },
-  firstRowContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   itemRow: {
     flexDirection: 'row',
+  },
+  itemTitleText: {
+    color: Colors.orange500,
   },
   itemDefaultText: {
     fontSize: 18,
     paddingRight: 10,
     color: Colors.white,
-  },
-  itemCommissionText: {
-    fontSize: 12,
-    paddingRight: 10,
-    color: 'rgba(255, 255, 255, 0.5)',
   },
   itemTextBold: {
     fontWeight: 'bold',
@@ -42,21 +36,7 @@ export const styles = StyleSheet.create({
   itemRedText: {
     color: Colors.red500,
   },
-  itemCyanText: {
-    color: Colors.cyan500,
-  },
   ctaButtonContainer: {
     justifyContent: 'center',
-  },
-  metricContainer: {
-    marginVertical: 5,
-  },
-  metricRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  itemMetricText: {
-    fontSize: 14,
-    color: Colors.white70,
   },
 });
