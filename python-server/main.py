@@ -202,8 +202,8 @@ class GreenRocket:
                     filled_order = self._place_order(
                         contract, option_order, order_type)
                     purchased_price = filled_order.orderStatus.avgFillPrice
-                    commission = round(filled_order.fills[0].commissionReport.commission, 2)
-                    PnL = round(filled_order.fills[0].commissionReport.realizedPNL, 2) # PnL already accounts for commission fees
+                    commission = round(
+                        filled_order.fills[0].commissionReport.commission, 2)
                 # Buy in terms of total amount of USD of options
                 else:
                     mid_price = await self._get_mid_price(qualify_contract)
@@ -220,6 +220,8 @@ class GreenRocket:
                     filled_order = self._place_order(
                         contract, option_order, order_type)
                     purchased_price = filled_order.orderStatus.avgFillPrice
+                    commission = round(
+                        filled_order.fills[0].commissionReport.commission, 2)
                 resp = {
                     'id': contract.conId,
                     'ticker': ticker,
@@ -229,7 +231,8 @@ class GreenRocket:
                     'strike': contract.strike,
                     'num_contract': num_contract,
                     'purchased_price': purchased_price,
-                    'purchased_time': self.get_newyork_date_now('%Y/%m/%d %H:%M:%S')
+                    'purchased_time': self.get_newyork_date_now('%Y/%m/%d %H:%M:%S'),
+                    "commission": commission
                 }
                 print(colored('Success! ' + str(resp), 'green'))
                 return resp
@@ -256,8 +259,10 @@ class GreenRocket:
                 filled_order = self._place_order(
                     contract, option_order, order_type)
                 sell_price = filled_order.orderStatus.avgFillPrice,
-                commission = round(filled_order.fills[0].commissionReport.commission, 2)
-                PnL = round(filled_order.fills[0].commissionReport.realizedPNL, 2)
+                commission = round(
+                    filled_order.fills[0].commissionReport.commission, 2)
+                PnL = round(
+                    filled_order.fills[0].commissionReport.realizedPNL, 2)
                 resp = {
                     'id': contract.conId,
                     'ticker': ticker,
@@ -267,7 +272,9 @@ class GreenRocket:
                     'strike': contract.strike,
                     'num_contract': num_contract,
                     'sell_price': sell_price,
-                    'sell_time': self.get_newyork_date_now('%Y/%m/%d %H:%M:%S')
+                    'sell_time': self.get_newyork_date_now('%Y/%m/%d %H:%M:%S'),
+                    "commission": commission,
+                    "pnl": PnL
                 }
                 print(colored('Success! ' + str(resp), 'green'))
                 return resp
