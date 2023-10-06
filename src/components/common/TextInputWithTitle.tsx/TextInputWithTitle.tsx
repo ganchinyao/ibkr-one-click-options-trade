@@ -28,10 +28,11 @@ const TextInputWithTitle: React.FC<TextInputWithTitleProps> = ({
         />
       ) : (
         <TextInput
+          autoCapitalize="characters"
           style={styles.currencyInput}
-          value={value as string}
+          defaultValue={value as string}
           onChangeText={(newText) => {
-            onChangeValue(newText.toLocaleUpperCase());
+            onChangeValue(newText);
           }}
           keyboardType={keyboardType}
         />

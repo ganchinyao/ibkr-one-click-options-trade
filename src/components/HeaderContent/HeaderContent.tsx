@@ -64,15 +64,17 @@ const HeaderContent: React.FC<HeaderContentProps> = ({}) => {
         <View style={styles.inputRow}>
           <View style={styles.inputContainer}>
             <TextInputWithTitle
+              key="Select Ticker"
               value={selectedTicker}
               onChangeValue={(newText: string) => {
-                dispatch(setTicker(newText));
+                setTimeout(() => dispatch(setTicker(newText)), 0);
               }}
               titleText="Select Ticker:"
             />
           </View>
           <View style={styles.inputContainer}>
             <TextInputWithTitle
+              key="Select DTE"
               value={dte ? dte.toString() : ''}
               onChangeValue={(newText: string) => {
                 if (newText === '') {
@@ -90,6 +92,7 @@ const HeaderContent: React.FC<HeaderContentProps> = ({}) => {
           <View style={styles.inputContainer}>
             {buyMethod === BuyMethod.USD ? (
               <TextInputWithTitle
+                key="USD to buy"
                 type={'currency'}
                 value={contractAmtUSD}
                 onChangeValue={(newValue: number) => {
@@ -99,6 +102,7 @@ const HeaderContent: React.FC<HeaderContentProps> = ({}) => {
               />
             ) : (
               <TextInputWithTitle
+                key="Contract to buy"
                 type={'text'}
                 value={contractQuantity.toString()}
                 onChangeValue={(newValue: number) => {

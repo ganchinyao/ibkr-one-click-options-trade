@@ -2,7 +2,7 @@
  * The list of tickers that is allow to be traded.
  * Feel free to add or remove any tickers.
  */
-export const AVAILABLE_TICKERS = ['SPY', 'QQQ', 'AAPL', 'BABA', 'NVDA', 'TSLA'];
+export const AVAILABLE_TICKERS = ['SPY', 'QQQ', 'AAPL', 'BABA', 'NVDA', 'TSLA', 'META'];
 
 /**
  * Default list of USD to display for quick select
